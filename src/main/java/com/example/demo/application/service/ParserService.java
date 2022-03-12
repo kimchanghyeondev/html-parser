@@ -23,13 +23,17 @@ public class ParserService {
     private final RestTemplate restTemplate;
 
     public String parseHTMLByURI(String url, ParseType type) {
-        ResponseEntity<String> response = getResponseByURL(url);
-        validationHttpStatus(response);
-        String responseBody = response.getBody();
+        String responseBody = getResponseBodyStringByURL(url);
         if (type.equals(ParseType.EXCLUDEHTML)) responseBody = removeHtmlTag(responseBody);
         String parsedBody = parseStringOnlyEngAndNumber(responseBody);
-        ParseStringVO parseStringVO = orderByAlphabetDesc(parsedBody);
+        ParseStringVO parseStringVO = toSeparatedEngNumVo(parsedBody);
         return parseStringVO.toCrossString();
+    }
+
+    private String getResponseBodyStringByURL(String url) {
+        ResponseEntity<String> response = getResponseByURL(url);
+        validationHttpStatus(response);
+        return response.getBody();
     }
 
 
@@ -37,7 +41,7 @@ public class ParserService {
         return responseBody.replaceAll("<[^>]*>", "").replaceAll("\n", "").trim();
     }
 
-    private ParseStringVO orderByAlphabetDesc(String parsedBody) {
+    private ParseStringVO toSeparatedEngNumVo(String parsedBody) {
         char[] htmlChars = parsedBody.toCharArray();
         IntStream asciiStream = CharBuffer.wrap(htmlChars).chars();
         HashMap<Integer, Integer> map = new HashMap<>();

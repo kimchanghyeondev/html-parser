@@ -2,10 +2,27 @@ package com.example.demo.application.vo;
 
 import lombok.Data;
 
+import java.util.Arrays;
+
 @Data
 public class ParseStringVO {
     private char[] chars;
     private char[] numbers;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParseStringVO that = (ParseStringVO) o;
+        return Arrays.equals(chars, that.chars) && Arrays.equals(numbers, that.numbers);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(chars);
+        result = 31 * result + Arrays.hashCode(numbers);
+        return result;
+    }
 
     public String toCrossString() {
         if (chars.length > numbers.length) {
