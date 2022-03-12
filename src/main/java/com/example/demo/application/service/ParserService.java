@@ -32,6 +32,7 @@ public class ParserService {
         return parseStringVO.toCrossString();
     }
 
+
     private String removeHtmlTag(String responseBody) {
         return responseBody.replaceAll("<[^>]*>", "").replaceAll("\n", "").trim();
     }
@@ -52,19 +53,25 @@ public class ParserService {
         for (int i = 65; i <= 90; i++) {
             Integer upperAmount = map.get(i);
             Integer lowerAmount = map.get(i + 32);
-            if (ObjectUtils.isEmpty(upperAmount)) continue;
-            for (int j = 0; j < upperAmount; j++) {
-                sb.append((char) i);
-            }
-            if (ObjectUtils.isEmpty(lowerAmount)) continue;
-            for (int j = 0; j < lowerAmount; j++) {
-                sb.append((char) (i + 32));
+            if (ObjectUtils.isEmpty(upperAmount)) {
+                if (ObjectUtils.isEmpty(lowerAmount)) continue;
+                for (int j = 0; j < lowerAmount; j++) { // 대문자는 없고 소문자만 있는경우 A->X , a->O 소문자만 붙힌다.
+                    sb.append((char) (i + 32));
+                }
+            } else { // 대문자가 있는경우
+                for (int j = 0; j < upperAmount; j++) {
+                    sb.append((char) i);
+                }
+                if (ObjectUtils.isEmpty(lowerAmount)) continue;
+                for (int j = 0; j < lowerAmount; j++) {
+                    sb.append((char) (i + 32));
+                }
             }
         }
 
         parseStringVO.setChars(sb.toString().toCharArray());
         sb.delete(0, sb.length());
-        //48 ~57
+        //48 ~57 numbers
         for (int i = 48; i <= 57; i++) {
             Integer numberAmount = map.get(i);
             if (ObjectUtils.isEmpty(numberAmount)) continue;
