@@ -3,6 +3,7 @@ package com.example.demo.application.service;
 
 import com.example.demo.application.enums.ParseType;
 import com.example.demo.application.vo.ParseStringVO;
+import com.example.demo.application.vo.QuotientAndRemainderResponse;
 import com.example.demo.exception.EmptyBodyException;
 import com.example.demo.exception.NetworkException;
 import com.example.demo.util.AsciiUtil;
@@ -22,12 +23,12 @@ import java.util.stream.IntStream;
 public class ParserService {
     private final RestTemplate restTemplate;
 
-    public String parseHTMLByURI(String url, ParseType type) {
+    public QuotientAndRemainderResponse parseHTMLByURI(String url, ParseType type, int unit) {
         String responseBody = getResponseBodyStringByURL(url);
         if (type.equals(ParseType.EXCLUDEHTML)) responseBody = removeHtmlTag(responseBody);
         String parsedBody = parseStringOnlyEngAndNumber(responseBody);
         ParseStringVO parseStringVO = toSeparatedEngNumVo(parsedBody);
-        return parseStringVO.toCrossString();
+        return new QuotientAndRemainderResponse(parseStringVO, unit);
     }
 
     private String getResponseBodyStringByURL(String url) {
