@@ -2,6 +2,7 @@ package com.example.demo.application.api;
 
 import com.example.demo.application.enums.ParseType;
 import com.example.demo.application.service.ParserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class ParserRestController {
     private final ParserService parserService;
 
     @GetMapping("/html")
+    @ApiOperation(value = "url과 parsingType으로 응답본문을 파싱한다.")
     public String parseHTMLByURI(@RequestParam
                                @Pattern(regexp = "^((http(s?))\\:\\/\\/)([0-9a-zA-Z\\-]+\\.)+[a-zA-Z]{2,6}(\\:[0-9]+)?(\\/\\S*)?$",
                                        message = "incorrect url")
