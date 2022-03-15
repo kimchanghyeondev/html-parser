@@ -2,39 +2,38 @@ package com.example.demo.application.service;
 
 import com.example.demo.application.vo.ParseStringVO;
 import com.example.demo.config.RestTemplateConfig;
+import com.example.demo.exception.NetworkException;
+import com.example.demo.util.HttpRequestUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
 class ParserServiceTest {
 
-    private ParserService parserService = new ParserService(new RestTemplateConfig().restTemplate());
-
+    private final HttpRequestUtils httpRequestUtils = new HttpRequestUtils(new RestTemplateConfig().restTemplate());
+    private final ParserService parserService = new ParserService(httpRequestUtils);
 
     @Test
     @DisplayName("URL로요청본문을가져온다")
-    public void getResponseBodyStringByURL() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void getResponseBodyStringByURL() {
         String url = "https://naver.com";
-        Method method = parserService.getClass().getDeclaredMethod("getResponseBodyStringByURL", String.class);
-        method.setAccessible(true);
-        String responseBody = (String) method.invoke(parserService, url);
-
-        assertThat(responseBody, responseBody.contains("네이버"));
+        String response = httpRequestUtils.getResponseBodyStringByURL(url);
+        assertThat(response.contains("네이버")).isTrue();
     }
 
+    @DisplayName("잘못된 url요청시 NetworkException이 발생한다.")
     @Test
-    @DisplayName("html태그제거")
-    public void removeHtmlTag() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = parserService.getClass().getDeclaredMethod("removeHtmlTag", String.class);
-        method.setAccessible(true);
-        String responseBody = (String) method.invoke(parserService, "<div>abc</did>");
-
-        assertThat(responseBody, responseBody.equals("abc"));
+    void failGetResponseBodyStringByURL() {
+        assertThatThrownBy(() ->
+                httpRequestUtils.getResponseBodyStringByURL("https://www.naver-wrong-fake.com"))
+                .isInstanceOf(NetworkException.class);
     }
 
     @Test
