@@ -25,9 +25,9 @@ public class ParserService {
     private final HttpRequestUtils httpRequestUtils;
 
     public QuotientAndRemainderResponse parseHTMLByURI(final String url,final ParseType type,final int unit) {
-        String responseBody = httpRequestUtils.getResponseBodyStringByURL(url);
-        responseBody = type.getParsedText(responseBody);
-        final String parsedBody = parseStringOnlyEngAndNumber(responseBody);
+        final String responseBody = httpRequestUtils.getResponseBodyStringByURL(url);
+        final String parsedResponseBody = type.getParsedText(responseBody);
+        final String parsedBody = parseStringOnlyEngAndNumber(parsedResponseBody);
         ParseStringVO parseStringVO = toSeparatedEngNumVo(parsedBody);
         return new QuotientAndRemainderResponse(parseStringVO, unit);
     }
