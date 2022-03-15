@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 @RestController
@@ -27,7 +28,7 @@ public class ParserRestController {
                                          message = "incorrect url")
                                          String url,
                                                        @RequestParam("type") ParseType type,
-                                                       @RequestParam("unit") int unit) {
+                                                       @Min (value = 1, message = "can use only positive number") @RequestParam("unit") int unit) {
         return parserService.parseHTMLByURI(url, type, unit);
     }
 }
