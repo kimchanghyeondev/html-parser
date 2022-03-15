@@ -7,6 +7,7 @@ import com.example.demo.application.vo.QuotientAndRemainderResponse;
 import com.example.demo.exception.EmptyBodyException;
 import com.example.demo.exception.NetworkException;
 import com.example.demo.util.AsciiUtil;
+import com.example.demo.util.HttpRequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -21,26 +22,16 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class ParserService {
-    private final RestTemplate restTemplate;
+    private final HttpRequestUtils httpRequestUtils;
 
     public QuotientAndRemainderResponse parseHTMLByURI(final String url,final ParseType type,final int unit) {
-        String responseBody = getResponseBodyStringByURL(url);
+        String responseBody = httpRequestUtils.getResponseBodyStringByURL(url);
         responseBody = type.getParsedText(responseBody);
         final String parsedBody = parseStringOnlyEngAndNumber(responseBody);
         ParseStringVO parseStringVO = toSeparatedEngNumVo(parsedBody);
         return new QuotientAndRemainderResponse(parseStringVO, unit);
     }
 
-    private String getResponseBodyStringByURL(String url) {
-        ResponseEntity<String> response = getResponseByURL(url);
-        validationHttpStatus(response);
-        return response.getBody();
-    }
-
-
-    private String removeHtmlTag(String responseBody) {
-        return responseBody.replaceAll("<[^>]*>", "").replaceAll("\n", "").trim();
-    }
 
     private ParseStringVO toSeparatedEngNumVo(String parsedBody) {
         char[] htmlChars = parsedBody.toCharArray();
@@ -96,28 +87,6 @@ public class ParserService {
         return sb.toString();
     }
 
-    private static HttpEntity getApplicationJsonHttpEntity() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", "application/json");
-        return new HttpEntity(headers);
-    }
 
-    private ResponseEntity<String> getResponseByURL(String url) {
-        try {
-            return restTemplate.exchange(url, HttpMethod.GET, getApplicationJsonHttpEntity(), String.class);
-        } catch (ResourceAccessException e) {
-            throw new NetworkException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.toString());
-        }
-    }
 
-    private void validationHttpStatus(ResponseEntity<String> response) {
-        HttpStatus statusCode = response.getStatusCode();
-        if (!statusCode.is2xxSuccessful()) {
-            throw new NetworkException(response.getStatusCodeValue(), response.getBody());
-        }
-
-        if (ObjectUtils.isEmpty(response.getBody())) {
-            throw new EmptyBodyException(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.toString());
-        }
-    }
 }
