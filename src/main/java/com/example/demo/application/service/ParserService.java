@@ -23,10 +23,10 @@ import java.util.stream.IntStream;
 public class ParserService {
     private final RestTemplate restTemplate;
 
-    public QuotientAndRemainderResponse parseHTMLByURI(String url, ParseType type, int unit) {
+    public QuotientAndRemainderResponse parseHTMLByURI(final String url,final ParseType type,final int unit) {
         String responseBody = getResponseBodyStringByURL(url);
-        if (type.equals(ParseType.EXCLUDEHTML)) responseBody = removeHtmlTag(responseBody);
-        String parsedBody = parseStringOnlyEngAndNumber(responseBody);
+        responseBody = type.getParsedText(responseBody);
+        final String parsedBody = parseStringOnlyEngAndNumber(responseBody);
         ParseStringVO parseStringVO = toSeparatedEngNumVo(parsedBody);
         return new QuotientAndRemainderResponse(parseStringVO, unit);
     }
