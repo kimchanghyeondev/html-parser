@@ -8,17 +8,17 @@ import lombok.RequiredArgsConstructor;
 public class QuotientAndRemainderResponse {
     private String quotient; // 몫
     private String remainder; // 나머지
-    private int bodyLength; // 전체 길이
 
-    public QuotientAndRemainderResponse(String text, int unit) {
-        bodyLength = text.length();
+
+    public QuotientAndRemainderResponse(final String text, final int unit) {
+        final int bodyLength = text.length();
         if (bodyLength < unit) {
             remainder = text;
             return;
         }
-        int quotientLength = (bodyLength / unit) * unit;
-        quotient = text.substring(0, quotientLength);
-        remainder = text.substring(quotientLength);
+        final int quotientLength = (bodyLength / unit) * unit;
+        this.quotient = text.substring(0, quotientLength);
+        this.remainder = text.substring(quotientLength);
     }
 
 }
