@@ -1,26 +1,24 @@
 package com.example.demo.application.vo;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class QuotientAndRemainderResponse {
-    private String quotient;
-    private String remainder;
-    private int bodyLength;
+    private String quotient; // 몫
+    private String remainder; // 나머지
+    private int bodyLength; // 전체 길이
 
-    public QuotientAndRemainderResponse(ParseStringVO vo, int unit) {
-        String s = vo.toCrossString();
-        bodyLength = s.length();
+    public QuotientAndRemainderResponse(String text, int unit) {
+        bodyLength = text.length();
         if (bodyLength < unit) {
-            remainder = s;
+            remainder = text;
             return;
         }
         int quotientLength = (bodyLength / unit) * unit;
-        int remainderLength = bodyLength - quotientLength;
-        quotient = s.substring(0, quotientLength - 1);
-        if (remainderLength != 0) {
-            remainder = s.substring(quotientLength, quotientLength + remainderLength);
-        }
+        quotient = text.substring(0, quotientLength);
+        remainder = text.substring(quotientLength);
     }
 
 }
