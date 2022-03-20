@@ -9,8 +9,6 @@ import java.util.stream.IntStream;
 
 @Component
 public class Sorter {
-
-
     public String sortEng(final String text) {
         final HashMap<Integer, Integer> map = getAsciiAmountMapByText(text);
         final StringBuilder sb = new StringBuilder();
@@ -40,6 +38,11 @@ public class Sorter {
         return sb.toString();
     }
 
+    public Separator sortSeparator(Separator separator) {
+        separator.setEng(sortEng(separator.getEng()));
+        separator.setNumber(sortNumber(separator.getNumber()));
+        return separator;
+    }
 
     private HashMap<Integer, Integer> getAsciiAmountMapByText(String text) {
         final char[] htmlChars = text.toCharArray();
@@ -51,6 +54,5 @@ public class Sorter {
         });
         return map;
     }
-
 
 }

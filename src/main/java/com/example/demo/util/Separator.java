@@ -1,6 +1,8 @@
 package com.example.demo.util;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.nio.CharBuffer;
@@ -10,11 +12,14 @@ import java.util.stream.IntStream;
 
 @Component
 @Getter
+@RequiredArgsConstructor
 public class Separator {
     private final Pattern engPattern = Pattern.compile("[a-zA-Z]");
     private final Pattern numPattern = Pattern.compile("[0-9]");
-
+    private final StringUtil stringUtil;
+    @Setter
     private String eng;
+    @Setter
     private String number;
 
     public Separator separateStringOnlyEngAndNumber(final String html) {
@@ -26,6 +31,10 @@ public class Separator {
         this.eng = getOnlyEng(engAndNumString);
         this.number = getOnlyNumb(engAndNumString);
         return this;
+    }
+
+    public String toMixedString() {
+        return stringUtil.mixString(this.eng, this.number);
     }
 
     private String getOnlyEng(final String text) {
@@ -43,5 +52,4 @@ public class Separator {
         }
         return sb.toString();
     }
-
 }
