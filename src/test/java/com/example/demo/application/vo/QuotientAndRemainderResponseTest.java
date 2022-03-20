@@ -1,5 +1,6 @@
 package com.example.demo.application.vo;
 
+import com.example.demo.application.response.QuotientAndRemainderResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

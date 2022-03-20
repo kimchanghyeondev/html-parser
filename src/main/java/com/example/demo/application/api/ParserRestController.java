@@ -2,7 +2,7 @@ package com.example.demo.application.api;
 
 import com.example.demo.application.enums.ParseType;
 import com.example.demo.application.service.ParserService;
-import com.example.demo.application.vo.QuotientAndRemainderResponse;
+import com.example.demo.application.response.QuotientAndRemainderResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

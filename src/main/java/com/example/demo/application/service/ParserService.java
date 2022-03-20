@@ -2,7 +2,7 @@ package com.example.demo.application.service;
 
 
 import com.example.demo.application.enums.ParseType;
-import com.example.demo.application.vo.QuotientAndRemainderResponse;
+import com.example.demo.application.response.QuotientAndRemainderResponse;
 import com.example.demo.util.HttpRequestUtils;
 import com.example.demo.util.Separator;
 import com.example.demo.util.Sorter;
